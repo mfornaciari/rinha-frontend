@@ -70,7 +70,7 @@ function renderArray(data, parent) {
   for (const element of data) {
     if (Array.isArray(element)) {
       renderArray(element, li);
-    } else if (typeof element === "object") {
+    } else if (element != null && typeof element === "object") {
       renderObject(element, li);
     } else {
       li.textContent = String(element);
@@ -89,7 +89,7 @@ function renderObject(data, parent) {
     dl.appendChild(dd);
     if (Array.isArray(data[key])) {
       renderArray(data[key], dd);
-    } else if (typeof data[key] === "object") {
+    } else if (data[key] != null && typeof data[key] === "object") {
       renderObject(data[key], dd);
     } else {
       dd.textContent = String(data[key]);

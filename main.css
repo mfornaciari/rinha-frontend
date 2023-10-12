@@ -8,84 +8,23 @@
 html,
 body,
 div,
-span,
-applet,
-object,
-iframe,
+/* span, */
 h1,
-h2,
+/* h2,
 h3,
 h4,
 h5,
-h6,
+h6, */
 p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
+/* a,
 img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
+ins, */
 dl,
 dt,
 dd,
 ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
+/* ul, */
+li {
   margin: 0;
   padding: 0;
   border: 0;
@@ -94,23 +33,18 @@ video {
   vertical-align: baseline;
 }
 
-/* HTML5 display-role reset for older browsers */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-  display: block;
+body {
+  height: 100dvh;
+  line-height: 1;
+  font-family: Inter;
 }
 
-body {
-  line-height: 1;
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 
 ol,
@@ -118,27 +52,8 @@ ul {
   list-style: none;
 }
 
-body {
-  /* display: flex;
-  flex-direction: column;
-  height: 100dvh;
-  align-items: center;
-  justify-content: center;
-  font-family: Inter; */
-}
-
-main {
-  display: flex;
-  flex-direction: column;
-  height: 100dvh;
-  align-items: center;
-  justify-content: center;
-  font-family: Inter;
-}
-
 #app-title {
   color: #000;
-  font-family: Inter;
   font-size: 48px;
   font-style: normal;
   font-weight: 700;
@@ -148,7 +63,6 @@ main {
 
 #app-subtitle {
   color: #000;
-  font-family: Inter;
   font-size: 24px;
   font-style: normal;
   font-weight: 400;
@@ -167,7 +81,6 @@ main {
   opacity: 0.7;
   background: linear-gradient(180deg, #E4E4E4 0%, #F7F7F7 100%);
   color: #000;
-  font-family: Inter;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -181,7 +94,6 @@ main {
 
 #error-message {
   color: #BF0E0E;
-  font-family: Inter;
   font-size: 1rem;
   font-style: normal;
   font-weight: 400;

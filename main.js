@@ -1,7 +1,8 @@
-const heading = document.querySelector("h1");
-const subtitle = document.querySelector("p");
-const button = document.querySelector("label");
-const input = document.querySelector("input");
+const main = document.querySelector("main");
+const heading = main.querySelector("h1");
+const subtitle = main.querySelector("p");
+const button = main.querySelector("label");
+const input = main.querySelector("input");
 const elements = [heading, subtitle, button, input];
 
 input.addEventListener("change", event => {
@@ -21,10 +22,7 @@ function handleFileChange(file) {
       invalidJson = true;
     }
     if (invalidJson) {
-      const errorMessage = document.createElement("p");
-      errorMessage.textContent = "Invalid file. Please load a valid JSON file.";
-      errorMessage.setAttribute("id", "error-message");
-      document.body.appendChild(errorMessage);
+      renderError();
     } else {
       removeAll();
       renderTitle(file.name);
@@ -34,6 +32,17 @@ function handleFileChange(file) {
   reader.readAsText(file);
 }
 
+function renderError() {
+  const errorMessageInElements = elements.find(element => element.id === "error-message");
+  if (errorMessageInElements != null) return;
+
+  const errorMessage = document.createElement("p");
+  errorMessage.textContent = "Invalid file. Please load a valid JSON file.";
+  errorMessage.setAttribute("id", "error-message");
+  main.appendChild(errorMessage);
+  elements.push(errorMessage);
+}
+
 function removeAll() {
   for (const element of elements) element.remove();
 }
@@ -41,14 +50,15 @@ function removeAll() {
 function renderTitle(filename) {
   const title = document.createElement("h1");
   title.textContent = filename;
-  document.body.appendChild(title);
+  title.setAttribute("id", "file-title");
+  main.appendChild(title);
 }
 
 function renderData(data) {
   if (Array.isArray(data)) {
-    renderArray(data, document.body);
+    renderArray(data, main);
   } else if (typeof data == "object") {
-    renderObject(data, document.body);
+    renderObject(data, main);
   }
 }
 

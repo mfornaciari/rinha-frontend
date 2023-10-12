@@ -1,9 +1,5 @@
 const main = document.querySelector("main");
-const heading = main.querySelector("h1");
-const subtitle = main.querySelector("p");
-const button = main.querySelector("label");
 const input = main.querySelector("input");
-const elements = [heading, subtitle, button, input];
 
 input.addEventListener("change", event => {
   handleFileChange(event.currentTarget.files[0]);
@@ -26,25 +22,24 @@ function handleFileChange(file) {
     } else {
       removeAll();
       renderTitle(file.name);
-      renderData(json);
+      renderData(json, main);
     }
   };
   reader.readAsText(file);
 }
 
 function renderError() {
-  const errorMessageInElements = elements.find(element => element.id === "error-message");
-  if (errorMessageInElements != null) return;
+  const renderedErrorMessage = document.getElementById("error-message");
+  if (renderedErrorMessage != null) return;
 
   const errorMessage = document.createElement("p");
   errorMessage.textContent = "Invalid file. Please load a valid JSON file.";
   errorMessage.setAttribute("id", "error-message");
   main.appendChild(errorMessage);
-  elements.push(errorMessage);
 }
 
 function removeAll() {
-  for (const element of elements) element.remove();
+  while (main.firstChild != null) main.removeChild(main.firstChild);
 }
 
 function renderTitle(filename) {
@@ -54,45 +49,53 @@ function renderTitle(filename) {
   main.appendChild(title);
 }
 
-function renderData(data) {
-  if (Array.isArray(data)) {
-    renderArray(data, main);
-  } else if (typeof data == "object") {
-    renderObject(data, main);
+function renderData(data, parent) {
+  if (isObject(data)) {
+    renderList(data, parent);
+  } else {
+    renderSpan(` ${data}`, parent, "value-span");
   }
 }
 
-function renderArray(data, parent) {
-  const ol = document.createElement("ol");
-  parent.appendChild(ol);
+function renderList(data, parent) {
+  const tag = Array.isArray(data) ? "ol" : "ul";
+  const list = document.createElement(tag);
+  parent.appendChild(list);
+  for (const property in data) renderLi(property, data[property], list);
+}
+
+function renderLi(property, value, parent) {
   const li = document.createElement("li");
-  ol.appendChild(li);
-  for (const element of data) {
-    if (Array.isArray(element)) {
-      renderArray(element, li);
-    } else if (element != null && typeof element === "object") {
-      renderObject(element, li);
-    } else {
-      li.textContent = String(element);
-    }
+  parent.appendChild(li);
+  const inOrderedList = parent.tagName === "OL";
+  const propertyClass = inOrderedList ? "number-span" : "name-span";
+  const propertySpan = renderSpan(`${property}:`, li, propertyClass);
+  if (inOrderedList && isObject(value)) {
+    const valueSpan = renderSpan(` [+]`, li, "collapsed");
+    propertySpan.addEventListener("click", () => {
+      expand(valueSpan, li, value);
+    });
+    valueSpan.addEventListener("click", () => {
+      expand(valueSpan, li, value);
+    });
+  } else {
+    renderData(value, li);
   }
 }
 
-function renderObject(data, parent) {
-  const dl = document.createElement("dl");
-  parent.appendChild(dl);
-  for (const key in data) {
-    const dt = document.createElement("dt");
-    dt.textContent = key;
-    dl.appendChild(dt);
-    const dd = document.createElement("dd");
-    dl.appendChild(dd);
-    if (Array.isArray(data[key])) {
-      renderArray(data[key], dd);
-    } else if (data[key] != null && typeof data[key] === "object") {
-      renderObject(data[key], dd);
-    } else {
-      dd.textContent = String(data[key]);
-    }
-  }
+function renderSpan(text, parent, spanClass) {
+  const span = document.createElement("span");
+  span.textContent = text;
+  span.setAttribute("class", spanClass);
+  parent.appendChild(span);
+  return span;
+}
+
+function isObject(data) {
+  return data != null && typeof data === "object";
+}
+
+function expand(span, parent, data) {
+  parent.removeChild(span);
+  renderData(data, parent);
 }

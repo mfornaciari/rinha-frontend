@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
 
 /* http://meyerweb.com/eric/tools/css/reset/
   v2.0 | 20110126
@@ -8,23 +8,7 @@
 html,
 body,
 div,
-/* span, */
-h1,
-/* h2,
-h3,
-h4,
-h5,
-h6, */
-p,
-/* a,
-img,
-ins, */
-dl,
-dt,
-dd,
-ol,
-/* ul, */
-li {
+h1 {
   margin: 0;
   padding: 0;
   border: 0;
@@ -34,9 +18,12 @@ li {
 }
 
 body {
-  height: 100dvh;
   line-height: 1;
   font-family: Inter;
+  font-weight: 400;
+  color: #000;
+  white-space: nowrap;
+  height: 100dvh;
 }
 
 main {
@@ -50,10 +37,49 @@ main {
 ol,
 ul {
   list-style: none;
+  padding: 0 0 0 1.75rem;
+}
+
+li {
+  position: relative;
+}
+
+/* ol::after {
+  content: ']';
+  color: #F2CAB8;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 176.523%;
+  margin-left: -1.75rem;
+} */
+
+span {
+  font-size: 1rem;
+  font-style: normal;
+  line-height: 176.523%;
+}
+
+.number-span {
+  color: #BFBFBF;
+}
+
+
+.name-span {
+  color: #4E9590;
+}
+
+.value-span {
+  color: #000;
+}
+
+.collapsed {
+  color: #F2CAB8;
+  font-weight: 700;
+  line-height: 176.523%;
 }
 
 #app-title {
-  color: #000;
   font-size: 48px;
   font-style: normal;
   font-weight: 700;
@@ -62,10 +88,8 @@ ul {
 }
 
 #app-subtitle {
-  color: #000;
   font-size: 24px;
   font-style: normal;
-  font-weight: 400;
   line-height: normal;
   margin-bottom: 1.5rem;
 }
@@ -80,7 +104,6 @@ ul {
   border: 1px solid #000;
   opacity: 0.7;
   background: linear-gradient(180deg, #E4E4E4 0%, #F7F7F7 100%);
-  color: #000;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
@@ -96,12 +119,10 @@ ul {
   color: #BF0E0E;
   font-size: 1rem;
   font-style: normal;
-  font-weight: 400;
   line-height: normal;
 }
 
 #file-title {
-  color: #000;
   font-size: 2rem;
   font-style: normal;
   font-weight: 700;

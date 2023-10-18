@@ -9,20 +9,13 @@ const reader = new FileReader();
 
 function handleFileChange(file) {
   reader.onload = event => {
-    let json;
-    let invalidJson = false;
-    const string = event.currentTarget.result;
     try {
-      json = JSON.parse(string);
-    } catch (error) {
-      invalidJson = true;
-    }
-    if (invalidJson) {
-      renderError();
-    } else {
+      const json = JSON.parse(event.currentTarget.result);
       removeAll();
       renderTitle(file.name);
       renderData(json, main);
+    } catch (error) {
+      renderError();
     }
   };
   reader.readAsText(file);

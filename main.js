@@ -67,10 +67,10 @@ function renderLi(property, value, parent) {
   if (isObject(value)) {
     const valueSpan = renderSpan(` [+]`, li, "collapsed");
     propertySpan.addEventListener("click", () => {
-      expand(valueSpan, li, value);
+      expand(valueSpan, value);
     });
     valueSpan.addEventListener("click", () => {
-      expand(valueSpan, li, value);
+      expand(valueSpan, value);
     });
   } else {
     renderData(value, li);
@@ -89,7 +89,8 @@ function isObject(data) {
   return data != null && typeof data === "object";
 }
 
-function expand(span, parent, data) {
+function expand(span, data) {
+  const parent = span.parentElement;
   parent.removeChild(span);
   renderData(data, parent);
 }

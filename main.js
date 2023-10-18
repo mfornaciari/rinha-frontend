@@ -1,11 +1,13 @@
 const main = document.querySelector("main");
+const inputLabel = main.querySelector("label");
 const input = main.querySelector("input");
-
+const reader = new FileReader();
+inputLabel.addEventListener("keypress", event => {
+  if (event.key === "Enter") input.click();
+});
 input.addEventListener("change", event => {
   handleFileChange(event.currentTarget.files[0]);
 });
-
-const reader = new FileReader();
 
 function handleFileChange(file) {
   reader.onload = event => {

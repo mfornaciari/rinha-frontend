@@ -62,10 +62,9 @@ function renderList(data, parent) {
 function renderLi(property, value, parent) {
   const li = document.createElement("li");
   parent.appendChild(li);
-  const inOrderedList = parent.tagName === "OL";
-  const propertyClass = inOrderedList ? "number-span" : "name-span";
+  const propertyClass = parent.tagName === "OL" ? "number-span" : "name-span";
   const propertySpan = renderSpan(`${property}:`, li, propertyClass);
-  if (inOrderedList && isObject(value)) {
+  if (isObject(value)) {
     const valueSpan = renderSpan(` [+]`, li, "collapsed");
     propertySpan.addEventListener("click", () => {
       expand(valueSpan, li, value);

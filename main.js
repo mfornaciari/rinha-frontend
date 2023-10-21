@@ -2,6 +2,9 @@ const main = document.querySelector("main");
 const inputLabel = main.querySelector("label");
 const input = main.querySelector("input");
 const reader = new FileReader();
+const queue = [];
+const maxQueueLength = 150;
+
 inputLabel.addEventListener("keypress", event => {
   if (event.key === "Enter") input.click();
 });
@@ -10,16 +13,18 @@ input.addEventListener("change", event => {
 });
 
 function handleFileChange(file) {
-  reader.onload = event => {
+  reader.addEventListener("load", event => {
     try {
       const json = JSON.parse(event.currentTarget.result);
       removeAll();
       renderTitle(file.name);
-      renderData(json, main);
+      enqueue(json);
+      for (const item of queue) render(item);
     } catch (error) {
+      console.log(error);
       renderError();
     }
-  };
+  });
   reader.readAsText(file);
 }
 
@@ -44,53 +49,75 @@ function renderTitle(filename) {
   main.appendChild(title);
 }
 
-function renderData(data, parent) {
-  if (isObject(data)) {
-    renderList(data, parent);
-  } else {
-    renderSpan(` ${data}`, parent, "value-span");
+function enqueue(data, parent = null, indexOnParent = null) {
+  const item = buildItem(data, parent, indexOnParent);
+  queue.push(item);
+  if (parent?.children != null) parent.children.push(item);
+  if (!isObject(data)) return item;
+
+  let childIndex = 0;
+  for (const [property, value] of Object.entries(data)) {
+    li = enqueue({}, item, childIndex);
+    enqueue(property, li, 0);
+    enqueue(value, li, 1);
+    childIndex += 1;
+    if (queue.length >= maxQueueLength) {
+      item.indexOfLastEnqueuedChild = childIndex;
+      break;
+    }
   }
+  return item;
 }
 
-function renderList(data, parent) {
-  const tag = Array.isArray(data) ? "ol" : "ul";
-  const list = document.createElement(tag);
-  parent.appendChild(list);
-  for (const property in data) renderLi(property, data[property], list);
+function buildItem(data, parent = null, indexOnParent = null) {
+  return {
+    id: queue.length,
+    data,
+    parent,
+    indexOnParent,
+    children: [],
+    indexOfLastEnqueuedChild: null,
+  };
 }
 
-function renderLi(property, value, parent) {
-  const li = document.createElement("li");
-  parent.appendChild(li);
-  const propertyClass = parent.tagName === "OL" ? "number-span" : "name-span";
-  const propertySpan = renderSpan(`${property}:`, li, propertyClass);
-  if (isObject(value)) {
-    const valueSpan = renderSpan(` [+]`, li, "collapsed");
-    propertySpan.addEventListener("click", () => {
-      expand(valueSpan, value);
-    });
-    valueSpan.addEventListener("click", () => {
-      expand(valueSpan, value);
-    });
-  } else {
-    renderData(value, li);
+function render(item) {
+  const tag = getTag(item.data);
+  const element = document.createElement(tag);
+  element.setAttribute("id", item.id);
+  if (tag === "span") {
+    const cssClass = getCssClass(item);
+    element.setAttribute("class", cssClass);
+    element.textContent = getTextContent(item);
   }
+  const parentElement = item.parent != null ? document.getElementById(item.parent.id) : main;
+  parentElement.appendChild(element);
 }
 
-function renderSpan(text, parent, spanClass) {
-  const span = document.createElement("span");
-  span.textContent = text;
-  span.setAttribute("class", spanClass);
-  parent.appendChild(span);
-  return span;
+function getTag(data) {
+  if (!isObject(data)) return "span";
+  if (Array.isArray(data)) return "ol";
+  if (!isEmpty(data)) return "ul";
+
+  return "li";
+}
+
+function getCssClass(item) {
+  if (item.indexOnParent === 1) return "value-span";
+  if (isNaN(item.data)) return "name-span";
+
+  return "number-span";
+}
+
+function getTextContent(item) {
+  if (item.indexOnParent === 0) return `${item.data}:`;
+
+  return ` ${item.data}`;
 }
 
 function isObject(data) {
   return data != null && typeof data === "object";
 }
 
-function expand(span, data) {
-  const parent = span.parentElement;
-  parent.removeChild(span);
-  renderData(data, parent);
+function isEmpty(object) {
+  return Object.keys(object).length === 0;
 }

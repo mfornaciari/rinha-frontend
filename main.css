@@ -41,16 +41,6 @@ li {
   content-visibility: auto;
 }
 
-/* ol::after {
-  content: ']';
-  color: #F2CAB8;
-  font-size: 1rem;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 176.523%;
-  margin-left: -1.75rem;
-} */
-
 span {
   font-size: 1rem;
   line-height: 176.523%;

@@ -21,7 +21,7 @@ function handleFileChange(file) {
       const json = JSON.parse(event.currentTarget.result);
       main.replaceChildren();
       renderTitle(file.name);
-      enqueue(json);
+      enqueue(json, null, null, true);
       for (const item of queue) render(item);
       lastElement = document.getElementById(queue[queue.length - 1].id);
       lastElementObserver.observe(lastElement);
@@ -35,8 +35,8 @@ function handleFileChange(file) {
 }
 
 // ENQUEUING
-function enqueue(data, parent = null, indexOnParent = null) {
-  const item = buildItem(data, parent, indexOnParent);
+function enqueue(data, parent = null, indexOnParent = null, root = false) {
+  const item = buildItem(data, parent, indexOnParent, root);
   queue.push(item);
   if (parent?.children != null) parent.children.push(item);
   enqueuedThisPass += 1;
@@ -54,7 +54,7 @@ function enqueue(data, parent = null, indexOnParent = null) {
   return item;
 }
 
-function buildItem(data, parent = null, indexOnParent = null) {
+function buildItem(data, parent = null, indexOnParent = null, root) {
   return {
     id: crypto.randomUUID(),
     data,
@@ -62,6 +62,7 @@ function buildItem(data, parent = null, indexOnParent = null) {
     indexOnParent,
     children: [],
     indexOfLastEnqueuedChild: 0,
+    root,
   };
 }
 
@@ -92,6 +93,7 @@ function render(item) {
     element.setAttribute("class", cssClass);
     element.textContent = getTextContent(item);
   }
+  if (item.root === true) element.setAttribute("class", "root");
   const parentElement = item.parent != null ? document.getElementById(item.parent.id) : main;
   parentElement.appendChild(element);
 }
@@ -106,6 +108,9 @@ function getTag(data) {
 
 function getCssClass(item) {
   if (item.indexOnParent === 1) return "value-span";
+
+  const valueData = item.parent.children[1].data;
+  if (Array.isArray(valueData)) return "name-span ol-title";
   if (isNaN(item.data)) return "name-span";
 
   return "number-span";
@@ -121,7 +126,6 @@ function getTextContent(item) {
 function handleScrollForward(entries, _observer) {
   for (const entry of entries) {
     if (entry.isIntersecting) {
-      console.log("render");
       const previousQueueLength = queue.length;
       const lastEnqueued = queue[queue.length - 1];
       enqueueForward(lastEnqueued);
@@ -135,15 +139,15 @@ function handleScrollForward(entries, _observer) {
 }
 
 function enqueueForward(item) {
-  console.log(item);
   const data = item.data;
-  if (!isObject(data)) {
+  const parent = item.parent;
+  if (parent != null && !isObject(data)) {
     enqueueForward(item.parent);
     return;
   }
 
   const childrenToEnqueue = Object.entries(data).slice(item.indexOfLastEnqueuedChild);
-  if (childrenToEnqueue.length === 0) {
+  if (parent != null && childrenToEnqueue.length === 0) {
     enqueueForward(item.parent);
     return;
   }

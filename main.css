@@ -35,6 +35,33 @@ ul {
   content-visibility: auto;
   list-style: none;
   padding: 0 0 0 1.75rem;
+  position: relative;
+}
+
+ol::before {
+  content: '';
+  height: 100%;
+  width: 1px;
+  position: absolute;
+  left: 3px;
+  bottom: 1.5rem;
+  background-color: #BFBFBF;
+}
+
+ul::before {
+  content: '';
+  height: 100%;
+  width: 1px;
+  position: absolute;
+  left: 3px;
+  background-color: #BFBFBF;
+}
+
+ol::after {
+  content: "]";
+  color: #F2CAB8;
+  font-weight: 700;
+  margin-left: -1.75rem;
 }
 
 li {
@@ -47,10 +74,13 @@ span {
   line-height: 176.523%;
 }
 
+.root::before {
+  all: unset;
+}
+
 .number-span {
   color: #BFBFBF;
 }
-
 
 .name-span {
   color: #4E9590;
@@ -60,10 +90,10 @@ span {
   color: #000;
 }
 
-.collapsed {
+.ol-title::after {
+  content: " [";
   color: #F2CAB8;
   font-weight: 700;
-  line-height: 176.523%;
 }
 
 #app-title {

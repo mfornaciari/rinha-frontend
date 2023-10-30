@@ -117,7 +117,9 @@ function getCssClass(item) {
 }
 
 function getTextContent(item) {
-  if (item.indexOnParent === 0) return `${item.data}:`;
+  const data = item.data;
+  if (item.indexOnParent === 0) return `${data}:`;
+  if (typeof data === "string") return ` "${data}"`;
 
   return ` ${item.data}`;
 }

@@ -20,7 +20,6 @@ body {
 
 main {
   contain: content;
-  content-visibility: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -32,7 +31,6 @@ main {
 ol,
 ul {
   contain: content;
-  content-visibility: auto;
   list-style: none;
   padding: 0 0 0 1.75rem;
   position: relative;
@@ -66,7 +64,6 @@ ol::after {
 
 li {
   contain: content;
-  content-visibility: auto;
 }
 
 span {
